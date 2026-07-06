@@ -8,7 +8,7 @@
 
 const AppConfig = Object.freeze({
   // ─── Toggle ──────────────────────────────────────────────
-  USE_MOCK: false,   // ✅ LIVE MODE — Railway backend
+  USE_MOCK: true,   // ✅ LIVE MODE — Railway backend
 
   // ─── Backend ─────────────────────────────────────────────
   BACKEND_BASE_URL: 'https://nodejsapi-production-055c.up.railway.app/api',
