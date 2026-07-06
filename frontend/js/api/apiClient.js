@@ -71,9 +71,16 @@ const ApiClient = (() => {
     localStorage.removeItem('student_name');
     localStorage.removeItem('student_year');
     localStorage.removeItem('student_id');
+    localStorage.removeItem('student_email');
+    localStorage.removeItem('student_role');
     // Redirect to login only if not already there
     if (!window.location.pathname.includes('login')) {
-      window.location.href = '../pages/login.html';
+      // Detect depth level: root=0, /pages/=1, /pages/admin/=2
+      const path = window.location.pathname.replace(/\\/g, '/');
+      let loginPath = 'pages/login.html';
+      if (path.includes('/pages/admin/')) loginPath = '../../pages/login.html';
+      else if (path.includes('/pages/'))  loginPath = '../pages/login.html';
+      window.location.href = loginPath;
     }
   }
 

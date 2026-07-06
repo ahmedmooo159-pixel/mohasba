@@ -56,48 +56,31 @@ document.addEventListener('DOMContentLoaded', () => {
       // In mock mode: simulate register delay then redirect
       if (typeof ApiClient !== 'undefined' && ApiClient.isMock()) {
         await new Promise(resolve => setTimeout(resolve, 900));
-
-        // Save student data locally (until real backend)
-        if (typeof Storage !== 'undefined') {
-          const yearLabels = {
-            '1': 'السنة الأولى',
-            '2': 'السنة الثانية',
-            '3': 'السنة الثالثة',
-            '4': 'السنة الرابعة'
-          };
-          localStorage.setItem('auth_token',   'mock-jwt-token-' + Date.now());
-          localStorage.setItem('student_name', name);
-          localStorage.setItem('student_year', yearLabels[year] || `السنة ${year}`);
-          localStorage.setItem('student_section', section);
-          localStorage.setItem('student_id',   email.replace(/[^a-z0-9]/gi, '_'));
-        }
-
-        // Redirect to dashboard
+        const yearLabels = { '1': 'السنة الأولى', '2': 'السنة الثانية', '3': 'السنة الثالثة', '4': 'السنة الرابعة' };
+        localStorage.setItem('auth_token',       'mock-jwt-token-' + Date.now());
+        localStorage.setItem('student_name',     name);
+        localStorage.setItem('student_year',     yearLabels[year] || `السنة ${year}`);
+        localStorage.setItem('student_section',  section);
+        localStorage.setItem('student_id',       email.replace(/[^a-z0-9]/gi, '_'));
         window.location.href = 'dashboard.html';
         return;
       }
 
-      // Real API call
-      const data = await ApiClient.post('/auth/register', { name, email, password, year, section });
-      
-      // Save user info if API returns it
+      // Real API call via AuthApi — handles field mapping & response normalisation
+      const data = await AuthApi.register({ name, email, password, year, section, role: 'student' });
+
+      const yearLabels = { '1': 'السنة الأولى', '2': 'السنة الثانية', '3': 'السنة الثالثة', '4': 'السنة الرابعة' };
+      const user = data.user || {};
+
       if (data.token) {
-        localStorage.setItem('auth_token',   data.token);
-      }
-      if (data.user) {
-        const yearLabels = {
-          '1': 'السنة الأولى',
-          '2': 'السنة الثانية',
-          '3': 'السنة الثالثة',
-          '4': 'السنة الرابعة'
-        };
-        localStorage.setItem('student_id',      data.user.id   || data.user._id || '');
-        localStorage.setItem('student_name',    data.user.name || name);
-        localStorage.setItem('student_year',    data.user.academicYear || yearLabels[year] || `السنة ${year}`);
-        localStorage.setItem('student_section', data.user.section || section);
+        localStorage.setItem('auth_token',      data.token);
+        localStorage.setItem('student_id',      user._id || user.id || '');
+        localStorage.setItem('student_name',    user.name || name);
+        localStorage.setItem('student_year',    user.academicYear || user.grade || yearLabels[year] || `السنة ${year}`);
+        localStorage.setItem('student_section', user.section || section);
         window.location.href = 'dashboard.html';
       } else {
-        // No user object returned — go to login
+        // Registered but no token — go to login
         window.location.href = 'login.html';
       }
 

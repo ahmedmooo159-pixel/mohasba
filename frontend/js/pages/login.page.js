@@ -34,23 +34,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     try {
       const response = await AuthApi.login(email, password);
-      
-      // Save token and user info
+
+      // Handle both flat {token, user} and nested {data: {token, user}} responses
+      const token = response.token || response.data?.token;
+      const user  = response.user  || response.data?.user || response.data;
+
       if (typeof Storage !== 'undefined') {
-        localStorage.setItem('auth_token', response.token);
-        localStorage.setItem('student_name', response.user.name);
-        localStorage.setItem('student_year', response.user.academicYear);
-        localStorage.setItem('student_id', response.user.id);
+        if (token) localStorage.setItem('auth_token', token);
+        if (user) {
+          localStorage.setItem('student_name', user.name || user.fullName || user.username || '');
+          localStorage.setItem('student_year', user.academicYear || user.grade || user.year || '');
+          localStorage.setItem('student_id',   user._id || user.id || '');
+          localStorage.setItem('student_email', user.email || email);
+          if (user.role) localStorage.setItem('student_role', user.role);
+        }
       }
 
       // Redirect to dashboard
       window.location.href = 'dashboard.html';
-      
+
     } catch (err) {
       console.error('Login error:', err);
       errorMsg.textContent = err.message || 'فشل تسجيل الدخول، يرجى المحاولة مرة أخرى.';
     } finally {
-      // Remove loading state
       submitBtn.disabled = false;
       submitBtn.classList.remove('loading');
     }
