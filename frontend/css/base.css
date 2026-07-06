@@ -1,0 +1,252 @@
+/*
+ * base.css — Reset + Design Tokens + Typography
+ * منصة محاسبتك | Commerce Faculty Platform
+ *
+ * =============================================
+ * BREAKPOINTS (استخدم في الـ media queries)
+ * =============================================
+ * Mobile   : < 768px
+ * Tablet   : 768px — 1023px
+ * Desktop  : >= 1024px
+ * Wide     : >= 1440px
+ *
+ * مثال الاستخدام:
+ *   @media (max-width: 767px)   { /* mobile  }
+ *   @media (min-width: 768px)   { /* tablet+ }
+ *   @media (min-width: 1024px)  { /* desktop }
+ *   @media (min-width: 1440px)  { /* wide    }
+ * =============================================
+ */
+
+/* =============================================
+   1. GOOGLE FONTS — Cairo
+   ============================================= */
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800&display=swap');
+
+/* =============================================
+   2. CSS CUSTOM PROPERTIES (DESIGN TOKENS)
+   ============================================= */
+:root {
+
+  /* --- Colors: Primary (Purple) --- */
+  --color-primary-50:  hsl(263, 80%, 96%);
+  --color-primary-100: hsl(263, 75%, 90%);
+  --color-primary-200: hsl(263, 72%, 80%);
+  --color-primary-300: hsl(263, 70%, 68%);
+  --color-primary-400: hsl(263, 68%, 58%);
+  --color-primary-500: hsl(263, 65%, 48%);   /* ← اللون الأساسي */
+  --color-primary-600: hsl(263, 68%, 40%);
+  --color-primary-700: hsl(263, 70%, 32%);
+  --color-primary-800: hsl(263, 72%, 24%);
+  --color-primary-900: hsl(263, 75%, 16%);
+
+  /* الأسامي المختصرة للاستخدام اليومي */
+  --color-primary:        var(--color-primary-500);
+  --color-primary-light:  var(--color-primary-300);
+  --color-primary-dark:   var(--color-primary-700);
+  --color-primary-hover:  var(--color-primary-600);
+
+  /* --- Colors: Sidebar / Dark Background --- */
+  --color-sidebar-bg:      hsl(240, 20%, 10%);   /* داكن جداً مع نبرة بنفسجية */
+  --color-sidebar-surface: hsl(240, 18%, 14%);   /* surface أفتح شوية */
+  --color-sidebar-border:  hsl(240, 16%, 20%);   /* فاصل بين عناصر السايدبار */
+  --color-sidebar-text:    hsl(240, 15%, 70%);   /* نص السايدبار الثانوي */
+  --color-sidebar-active:  hsl(263, 65%, 48%);   /* = primary للعنصر المختار */
+
+  /* --- Colors: Page Background & Surfaces --- */
+  --color-bg:          hsl(240, 15%, 97%);   /* خلفية الصفحة (فاتح) */
+  --color-surface:     hsl(0, 0%, 100%);     /* سطح الكروت والـ modals */
+  --color-surface-alt: hsl(240, 14%, 94%);   /* سطح بديل خفيف */
+  --color-border:      hsl(240, 10%, 88%);   /* حدود الكروت والـ inputs */
+
+  /* --- Colors: Text --- */
+  --color-text-primary:   hsl(240, 15%, 12%);   /* النص الأساسي (شبه أسود) */
+  --color-text-secondary: hsl(240, 10%, 45%);   /* نص ثانوي / وصفي */
+  --color-text-muted:     hsl(240, 8%, 65%);    /* نص خافت / captions */
+  --color-text-inverse:   hsl(0, 0%, 100%);     /* نص على خلفية داكنة */
+  --color-text-on-primary: hsl(0, 0%, 100%);    /* نص على البنفسجي */
+
+  /* --- Colors: State / Semantic --- */
+  /* Success */
+  --color-success-50:  hsl(145, 70%, 94%);
+  --color-success-500: hsl(145, 60%, 38%);
+  --color-success-600: hsl(145, 62%, 30%);
+  --color-success:     var(--color-success-500);
+  --color-success-bg:  var(--color-success-50);
+
+  /* Warning */
+  --color-warning-50:  hsl(38, 100%, 94%);
+  --color-warning-500: hsl(38, 92%, 50%);
+  --color-warning-600: hsl(38, 88%, 42%);
+  --color-warning:     var(--color-warning-500);
+  --color-warning-bg:  var(--color-warning-50);
+
+  /* Error */
+  --color-error-50:  hsl(0, 86%, 95%);
+  --color-error-500: hsl(0, 72%, 50%);
+  --color-error-600: hsl(0, 74%, 42%);
+  --color-error:     var(--color-error-500);
+  --color-error-bg:  var(--color-error-50);
+
+  /* Info */
+  --color-info-50:  hsl(210, 100%, 94%);
+  --color-info-500: hsl(210, 80%, 50%);
+  --color-info:     var(--color-info-500);
+  --color-info-bg:  var(--color-info-50);
+
+  /* --- Typography --- */
+  --font-family-base: 'Cairo', 'Segoe UI', system-ui, sans-serif;
+
+  /* Font Sizes — Type Scale (1.25 ratio) */
+  --text-xs:   0.694rem;   /* ~11px  — captions, labels صغيرة */
+  --text-sm:   0.833rem;   /* ~13px  — نص مساعد / secondary */
+  --text-base: 1rem;       /* 16px   — النص الأساسي */
+  --text-md:   1.125rem;   /* ~18px  — نص أكبر شوية */
+  --text-lg:   1.25rem;    /* 20px   — عناوين فرعية صغيرة */
+  --text-xl:   1.5rem;     /* 24px   — h4 */
+  --text-2xl:  1.875rem;   /* 30px   — h3 */
+  --text-3xl:  2.25rem;    /* 36px   — h2 */
+  --text-4xl:  3rem;       /* 48px   — h1 / hero */
+
+  /* Font Weights */
+  --font-light:    300;
+  --font-regular:  400;
+  --font-medium:   500;
+  --font-semibold: 600;
+  --font-bold:     700;
+  --font-extrabold:800;
+
+  /* Line Heights */
+  --leading-tight:  1.25;
+  --leading-snug:   1.4;
+  --leading-normal: 1.6;
+  --leading-loose:  1.8;
+
+  /* Letter Spacing */
+  --tracking-tight:  -0.02em;
+  --tracking-normal:  0em;
+  --tracking-wide:    0.04em;
+
+  /* --- Spacing Scale — 4px steps --- */
+  --space-0:   0;
+  --space-1:   0.25rem;   /* 4px  */
+  --space-2:   0.5rem;    /* 8px  */
+  --space-3:   0.75rem;   /* 12px */
+  --space-4:   1rem;      /* 16px */
+  --space-5:   1.25rem;   /* 20px */
+  --space-6:   1.5rem;    /* 24px */
+  --space-8:   2rem;      /* 32px */
+  --space-10:  2.5rem;    /* 40px */
+  --space-12:  3rem;      /* 48px */
+  --space-16:  4rem;      /* 64px */
+  --space-20:  5rem;      /* 80px */
+  --space-24:  6rem;      /* 96px */
+
+  /* --- Border Radius --- */
+  --radius-sm:   0.375rem;   /* 6px  — inputs صغيرة، badges */
+  --radius-md:   0.625rem;   /* 10px — أزرار */
+  --radius-lg:   0.875rem;   /* 14px — كروت */
+  --radius-xl:   1.25rem;    /* 20px — كروت كبيرة / modals */
+  --radius-full: 9999px;     /* pill / أيقونات دائرية */
+
+  /* --- Shadows --- */
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.10), 0 2px 4px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.12), 0 4px 8px rgba(0, 0, 0, 0.06);
+  --shadow-xl: 0 16px 40px rgba(0, 0, 0, 0.14), 0 8px 16px rgba(0, 0, 0, 0.08);
+  --shadow-primary: 0 4px 16px hsla(263, 65%, 48%, 0.35);
+
+  /* --- Transitions --- */
+  --transition-fast:   150ms ease;
+  --transition-base:   250ms ease;
+  --transition-slow:   400ms ease;
+
+  /* --- Z-index Scale --- */
+  --z-below:    -1;
+  --z-base:      0;
+  --z-raised:   10;
+  --z-dropdown: 100;
+  --z-sticky:   200;
+  --z-overlay:  300;
+  --z-modal:    400;
+  --z-toast:    500;
+
+  /* --- Layout --- */
+  --sidebar-width:        260px;
+  --sidebar-width-collapsed: 72px;
+  --header-height:        64px;
+  --content-max-width:    1200px;
+}
+
+/* =============================================
+   3. CSS RESET
+   ============================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-family-base);
+  font-size: var(--text-base);
+  font-weight: var(--font-regular);
+  line-height: var(--leading-normal);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg);
+  direction: rtl;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* =============================================
+   4. TYPOGRAPHY BASE STYLES
+   ============================================= */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: var(--font-bold);
+  line-height: var(--leading-snug);
+  color: var(--color-text-primary);
+}
+
+h1 { font-size: var(--text-4xl); font-weight: var(--font-extrabold); }
+h2 { font-size: var(--text-3xl); }
+h3 { font-size: var(--text-2xl); }
+h4 { font-size: var(--text-xl); }
+h5 { font-size: var(--text-lg);  font-weight: var(--font-semibold); }
+h6 { font-size: var(--text-md);  font-weight: var(--font-semibold); }
+
+p {
+  line-height: var(--leading-normal);
+  color: var(--color-text-secondary);
+}
+
+small, .text-sm  { font-size: var(--text-sm); }
+.text-xs         { font-size: var(--text-xs); }
+.text-muted      { color: var(--color-text-muted); }
+.text-secondary  { color: var(--color-text-secondary); }
+.text-primary-color { color: var(--color-primary); }
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+a:hover { color: var(--color-primary-hover); }
+
+ul, ol { list-style: none; }
+
+img, video { display: block; max-width: 100%; }
+
+input, button, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+button { cursor: pointer; border: none; background: none; }

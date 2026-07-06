@@ -1,0 +1,31 @@
+{
+  "examSections": [
+    {
+      "id": "es1",
+      "subjectId": "acc-fin",
+      "title": "امتحان المحاسبة المالية — نظري",
+      "type": "theory",
+      "questionsCount": 5,
+      "durationMinutes": 10,
+      "icon": "📝"
+    },
+    {
+      "id": "es2",
+      "subjectId": "acc-fin",
+      "title": "امتحان المحاسبة المالية — عملي",
+      "type": "practical",
+      "questionsCount": 3,
+      "durationMinutes": 15,
+      "icon": "🧮"
+    },
+    {
+      "id": "es3",
+      "subjectId": "acc-cost",
+      "title": "امتحان محاسبة التكاليف — نظري",
+      "type": "theory",
+      "questionsCount": 4,
+      "durationMinutes": 8,
+      "icon": "📝"
+    }
+  ]
+}

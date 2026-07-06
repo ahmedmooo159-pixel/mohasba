@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>إدارة الأسئلة — منصة محاسبتك</title>
+  <link rel="stylesheet" href="../../css/base.css"/>
+  <link rel="stylesheet" href="../../css/admin.css"/>
+</head>
+<body class="admin-body">
+
+  <div class="admin-shell">
+    <main class="admin-main">
+
+      <div class="admin-page-header">
+        <div>
+          <h1 class="admin-page-title">بنك الأسئلة</h1>
+          <p class="admin-page-subtitle">أضف أو احذف الأسئلة لكل قسم امتحان.</p>
+        </div>
+        <button class="admin-btn primary" id="openAddQBtn">+ إضافة سؤال</button>
+      </div>
+
+      <!-- Add Question Form -->
+      <div class="admin-form-card" id="questionFormCard">
+        <h3 class="admin-form-title">إضافة سؤال جديد</h3>
+        <div class="admin-form-grid">
+          <div class="form-group">
+            <label class="form-label">نوع السؤال</label>
+            <select id="qType" class="form-select">
+              <option value="mcq">اختيار من متعدد (MCQ)</option>
+              <option value="true_false">صح أو خطأ</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">قسم الامتحان</label>
+            <select id="qSection" class="form-select"><option value="">اختر القسم...</option></select>
+          </div>
+          <div class="form-group" style="grid-column:1/-1">
+            <label class="form-label">نص السؤال</label>
+            <input type="text" id="qText" class="form-input" placeholder="اكتب السؤال هنا..."/>
+          </div>
+          <!-- MCQ options -->
+          <div id="mcqOptions" style="grid-column:1/-1">
+            <label class="form-label" style="margin-bottom:var(--space-2);display:block">الخيارات (حدد الإجابة الصحيحة)</label>
+            <div style="display:flex;flex-direction:column;gap:var(--space-2);">
+              ${[0,1,2,3].map(i => `
+                <div style="display:flex;gap:var(--space-2);align-items:center">
+                  <input type="radio" name="correctOpt" value="${i}" id="opt${i}Radio" style="flex-shrink:0;accent-color:var(--color-primary)"/>
+                  <input type="text" id="opt${i}" class="form-input" placeholder="الخيار ${i+1}"/>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          <!-- T/F correct answer -->
+          <div id="tfOptions" style="display:none">
+            <label class="form-label">الإجابة الصحيحة</label>
+            <select id="tfAnswer" class="form-select">
+              <option value="true">صح</option>
+              <option value="false">خطأ</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">الدرجة</label>
+            <input type="number" id="qPoints" class="form-input" value="2" min="1" max="10"/>
+          </div>
+        </div>
+        <div class="admin-form-actions">
+          <button class="admin-btn" id="cancelQForm">إلغاء</button>
+          <button class="admin-btn primary" id="saveQBtn">حفظ السؤال</button>
+        </div>
+      </div>
+
+      <!-- Filter -->
+      <div style="display:flex;gap:var(--space-3);margin-bottom:var(--space-4);flex-wrap:wrap">
+        <select id="filterSection" class="form-select" style="max-width:260px">
+          <option value="">كل الأقسام</option>
+        </select>
+        <select id="filterType" class="form-select" style="max-width:180px">
+          <option value="">كل الأنواع</option>
+          <option value="mcq">MCQ</option>
+          <option value="true_false">صح/خطأ</option>
+        </select>
+      </div>
+
+      <!-- Questions Table -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h2 class="admin-card-title">الأسئلة</h2>
+          <span id="questionCount" style="font-size:var(--text-sm);color:var(--color-text-secondary)"></span>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>السؤال</th>
+                <th>النوع</th>
+                <th>القسم</th>
+                <th>الدرجة</th>
+                <th>إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="questionsTbody">
+              <tr><td colspan="6" style="text-align:center;padding:var(--space-6);color:var(--color-text-muted)">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../../js/api/apiClient.js"></script>
+  <script src="../../js/pages/admin.js"></script>
+  <script>
+    if (!Admin.guard()) throw new Error('Unauthorized');
+    Admin.renderSidebar('admin-questions');
+
+    let questions = [];
+    let sections  = [];
+
+    function renderTable() {
+      const filterSec  = document.getElementById('filterSection').value;
+      const filterType = document.getElementById('filterType').value;
+
+      const filtered = questions.filter(q =>
+        (!filterSec  || q.sectionId === filterSec) &&
+        (!filterType || q.type === filterType)
+      );
+
+      document.getElementById('questionCount').textContent = `(${filtered.length} سؤال)`;
+
+      const tbody = document.getElementById('questionsTbody');
+      if (!filtered.length) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:var(--space-6);color:var(--color-text-muted)">لا توجد أسئلة.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map((q, i) => {
+        const sec = sections.find(s => s.id === q.sectionId);
+        const typeBadge = q.type === 'mcq'
+          ? '<span class="admin-badge mcq">MCQ</span>'
+          : '<span class="admin-badge true_false">صح/خطأ</span>';
+        return `
+          <tr>
+            <td>${i + 1}</td>
+            <td style="max-width:300px">${q.text}</td>
+            <td>${typeBadge}</td>
+            <td style="font-size:var(--text-xs)">${sec ? sec.title : q.sectionId}</td>
+            <td>${q.points}</td>
+            <td class="tbl-actions">
+              <button class="tbl-btn delete" onclick="deleteQuestion('${q.id}')">حذف</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function populateSectionDropdowns() {
+      const opts = sections.map(s => `<option value="${s.id}">${s.title}</option>`).join('');
+      document.getElementById('qSection').innerHTML      = '<option value="">اختر القسم...</option>' + opts;
+      document.getElementById('filterSection').innerHTML = '<option value="">كل الأقسام</option>' + opts;
+    }
+
+    function deleteQuestion(id) {
+      if (!confirm('حذف هذا السؤال؟')) return;
+      questions = questions.filter(q => q.id !== id);
+      renderTable();
+    }
+
+    // Type toggle
+    document.getElementById('qType').addEventListener('change', function() {
+      document.getElementById('mcqOptions').style.display = this.value === 'mcq' ? 'block' : 'none';
+      document.getElementById('tfOptions').style.display  = this.value === 'true_false' ? 'block' : 'none';
+    });
+
+    // Filters
+    document.getElementById('filterSection').addEventListener('change', renderTable);
+    document.getElementById('filterType').addEventListener('change', renderTable);
+
+    // Open/close form
+    document.getElementById('openAddQBtn').addEventListener('click', () => {
+      document.getElementById('questionFormCard').classList.add('open');
+    });
+    document.getElementById('cancelQForm').addEventListener('click', () => {
+      document.getElementById('questionFormCard').classList.remove('open');
+    });
+
+    // Save question
+    document.getElementById('saveQBtn').addEventListener('click', () => {
+      const type      = document.getElementById('qType').value;
+      const sectionId = document.getElementById('qSection').value;
+      const text      = document.getElementById('qText').value.trim();
+      const points    = parseInt(document.getElementById('qPoints').value) || 2;
+
+      if (!sectionId || !text) { alert('يرجى تحديد القسم وكتابة نص السؤال.'); return; }
+
+      let newQ = { id: 'q-' + Date.now(), sectionId, type, text, points };
+
+      if (type === 'mcq') {
+        const options = [0,1,2,3].map(i => document.getElementById(`opt${i}`).value.trim());
+        if (options.some(o => !o)) { alert('يرجى ملء الخيارات الأربعة.'); return; }
+        const correctRadio = document.querySelector('input[name="correctOpt"]:checked');
+        if (!correctRadio) { alert('يرجى تحديد الإجابة الصحيحة.'); return; }
+        newQ.options = options;
+        newQ.correctAnswer = parseInt(correctRadio.value);
+      } else {
+        newQ.correctAnswer = document.getElementById('tfAnswer').value === 'true';
+      }
+
+      questions.push(newQ);
+      document.getElementById('questionFormCard').classList.remove('open');
+      document.getElementById('qText').value = '';
+      [0,1,2,3].forEach(i => { document.getElementById(`opt${i}`).value = ''; });
+      renderTable();
+    });
+
+    // INIT
+    (async () => {
+      try {
+        const [qd, sd] = await Promise.all([
+          ApiClient.get('/exam-sections/questions'),
+          ApiClient.get('/subjects/exam-sections'),
+        ]);
+        questions = qd.questions      || [];
+        sections  = sd.examSections   || [];
+        populateSectionDropdowns();
+        renderTable();
+      } catch(err) { console.error(err); }
+    })();
+  </script>
+</body>
+</html>

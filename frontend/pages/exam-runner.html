@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الامتحان — منصة محاسبتك</title>
+  <meta name="description" content="صفحة تشغيل الامتحان — سؤال بسؤال مع مؤقت وحفظ تلقائي" />
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/exams.css" />
+  <link rel='stylesheet' href='../css/ai-widget.css' />
+</head>
+<body class="exam-runner-body">
+
+  <div class="exam-runner-container" id="examRunnerApp">
+    <!-- Rendered entirely by examRunner.page.js -->
+    <div style="display:flex;align-items:center;justify-content:center;min-height:80vh">
+      <p style="color:var(--color-text-secondary)">جاري تحميل الامتحان...</p>
+    </div>
+  </div>
+
+  <script src="../js/components/authGuard.js"></script>
+  <script src="../js/api/config.js"></script>
+  <script src="../js/api/apiClient.js"></script>
+  <script src="../js/api/exams.api.js"></script>
+  <script src="../js/components/examTimer.js"></script>
+  <script src="../js/pages/examRunner.page.js"></script>
+  <script src='../js/components/aiChatWidget.js'></script>
+</body>
+</html>

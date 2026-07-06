@@ -1,0 +1,267 @@
+/*
+ * concepts.css — styles for the concepts / glossary page
+ * منصة محاسبتك
+ *
+ * All styling rules build upon base.css variables.
+ */
+
+/* =============================================
+   PAGE HEADER
+   ============================================= */
+.page-header {
+  margin-bottom: var(--space-6);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.page-title {
+  font-size: var(--text-2xl);
+  font-weight: var(--font-extrabold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-2);
+}
+
+.page-subtitle {
+  font-size: var(--text-base);
+  color: var(--color-text-secondary);
+}
+
+/* =============================================
+   SUBJECT SELECTOR (Horizontal scroll on mobile)
+   ============================================= */
+.subject-selector {
+  margin-bottom: var(--space-8);
+}
+
+.section-label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  color: var(--color-text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--space-3);
+  display: block;
+}
+
+.subject-list {
+  display: flex;
+  gap: var(--space-3);
+  overflow-x: auto;
+  padding-bottom: var(--space-3);
+  scrollbar-width: none; /* Firefox */
+}
+
+.subject-list::-webkit-scrollbar {
+  display: none; /* Safari and Chrome */
+}
+
+.subject-card {
+  flex: 0 0 auto;
+  width: 140px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  text-align: center;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  user-select: none;
+}
+
+.subject-card:hover {
+  border-color: var(--color-primary-300);
+  background: var(--color-surface-alt);
+}
+
+.subject-card.active {
+  border-color: var(--color-primary);
+  background: var(--color-primary-50);
+  box-shadow: 0 0 0 2px var(--color-primary-100);
+}
+
+.subject-icon {
+  font-size: 2rem;
+  margin-bottom: var(--space-2);
+}
+
+.subject-name {
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--color-text-primary);
+}
+
+.subject-card.active .subject-name {
+  color: var(--color-primary-800);
+}
+
+/* =============================================
+   CHAPTER & CONTENT LAYOUT
+   ============================================= */
+.content-layout {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+@media (min-width: 1024px) {
+  .content-layout {
+    grid-template-columns: 300px 1fr;
+    gap: var(--space-8);
+  }
+}
+
+/* =============================================
+   CHAPTER SELECTOR (Sidebar-like on desktop)
+   ============================================= */
+.chapter-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-2);
+}
+
+.chapter-item {
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: background var(--transition-fast), color var(--transition-fast);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.chapter-item:hover {
+  background: var(--color-surface-alt);
+}
+
+.chapter-item.active {
+  background: var(--color-primary);
+  color: var(--color-text-inverse);
+}
+
+.chapter-title {
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
+  color: var(--color-text-primary);
+}
+
+.chapter-item.active .chapter-title {
+  color: var(--color-text-inverse);
+}
+
+.chapter-desc {
+  font-size: var(--text-xs);
+  color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+
+.chapter-item.active .chapter-desc {
+  color: var(--color-primary-100);
+}
+
+/* =============================================
+   CONCEPTS VIEWER (Cards)
+   ============================================= */
+.concepts-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.concept-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-xs);
+  transition: box-shadow var(--transition-fast);
+}
+
+.concept-card:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.concept-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-3);
+}
+
+.concept-term {
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--color-primary-700);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.concept-term::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 20px;
+  background: var(--color-primary);
+  border-radius: var(--radius-full);
+}
+
+.concept-category {
+  font-size: var(--text-xs);
+  font-weight: var(--font-medium);
+  padding: 2px var(--space-2);
+  background: var(--color-surface-alt);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-sm);
+}
+
+.concept-definition {
+  font-size: var(--text-base);
+  color: var(--color-text-primary);
+  line-height: 1.6;
+  margin-bottom: var(--space-3);
+}
+
+.concept-example {
+  font-size: var(--text-sm);
+  color: var(--color-text-secondary);
+  background: var(--color-info-bg);
+  padding: var(--space-3);
+  border-radius: var(--radius-md);
+  border-right: 3px solid var(--color-info-500);
+}
+
+.concept-example strong {
+  color: var(--color-info-700);
+}
+
+/* =============================================
+   EMPTY STATES
+   ============================================= */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-10) var(--space-4);
+  text-align: center;
+  background: var(--color-surface);
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-lg);
+  color: var(--color-text-muted);
+}
+
+.empty-state-icon {
+  font-size: 3rem;
+  margin-bottom: var(--space-4);
+  opacity: 0.5;
+}
+
+.empty-state-text {
+  font-size: var(--text-base);
+  max-width: 300px;
+}

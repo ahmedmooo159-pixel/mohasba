@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة التحكم — منصة محاسبتك</title>
+  <link rel="stylesheet" href="../../css/base.css" />
+  <link rel="stylesheet" href="../../css/admin.css" />
+</head>
+<body class="admin-body">
+
+  <div class="admin-shell">
+    <!-- Sidebar injected by admin.js -->
+    <main class="admin-main" id="adminMain">
+
+      <div class="admin-page-header">
+        <div>
+          <h1 class="admin-page-title">لوحة التحكم</h1>
+          <p class="admin-page-subtitle">نظرة عامة على المنصة والبيانات.</p>
+        </div>
+      </div>
+
+      <!-- Stats -->
+      <div class="admin-stats-grid" id="adminStatsGrid">
+        <div class="admin-stat-card">
+          <div class="admin-stat-icon">📚</div>
+          <div class="admin-stat-value" id="stat-subjects">—</div>
+          <div class="admin-stat-label">مادة دراسية</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-icon">📖</div>
+          <div class="admin-stat-value" id="stat-chapters">—</div>
+          <div class="admin-stat-label">شابتر</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-icon">❓</div>
+          <div class="admin-stat-value" id="stat-questions">—</div>
+          <div class="admin-stat-label">سؤال في البنك</div>
+        </div>
+        <div class="admin-stat-card">
+          <div class="admin-stat-icon">🎬</div>
+          <div class="admin-stat-value" id="stat-videos">—</div>
+          <div class="admin-stat-label">فيديو شارح</div>
+        </div>
+      </div>
+
+      <!-- Quick links -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h2 class="admin-card-title">الإجراءات السريعة</h2>
+        </div>
+        <div style="padding:var(--space-5);display:flex;flex-wrap:wrap;gap:var(--space-3);">
+          <a href="admin-subjects.html" class="admin-btn primary">+ إضافة مادة جديدة</a>
+          <a href="admin-questions.html" class="admin-btn primary">+ إضافة سؤال جديد</a>
+          <a href="admin-students.html" class="admin-btn">عرض الطلاب</a>
+        </div>
+      </div>
+
+      <!-- Subjects quick table -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h2 class="admin-card-title">المواد الدراسية</h2>
+          <a href="admin-subjects.html" class="tbl-btn edit">عرض الكل</a>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="dashSubjectsTable">
+            <thead>
+              <tr>
+                <th>المادة</th>
+                <th>الأيقونة</th>
+                <th>عدد الشباتر</th>
+                <th>إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="dashSubjectsTbody">
+              <tr><td colspan="4" style="text-align:center;color:var(--color-text-muted);padding:var(--space-6)">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../../js/api/apiClient.js"></script>
+  <script src="../../js/pages/admin.js"></script>
+  <script>
+    if (!Admin.guard()) throw new Error('Unauthorized');
+    Admin.renderSidebar('admin-dashboard');
+
+    (async () => {
+      try {
+        const [subjectsData, chaptersData, questionsData, videosData] = await Promise.all([
+          ApiClient.get('/subjects'),
+          ApiClient.get('/subjects/chapters'),
+          ApiClient.get('/exam-sections/questions'),
+          ApiClient.get('/chapters/videos'),
+        ]);
+
+        const subjects  = subjectsData.subjects  || [];
+        const chapters  = chaptersData.chapters  || [];
+        const questions = questionsData.questions || [];
+        const videos    = videosData.videos       || [];
+
+        document.getElementById('stat-subjects').textContent  = subjects.length;
+        document.getElementById('stat-chapters').textContent  = chapters.length;
+        document.getElementById('stat-questions').textContent = questions.length;
+        document.getElementById('stat-videos').textContent    = videos.length;
+
+        // Subjects table
+        const tbody = document.getElementById('dashSubjectsTbody');
+        if (subjects.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:var(--color-text-muted)">لا توجد مواد مسجلة.</td></tr>';
+        } else {
+          tbody.innerHTML = subjects.map(s => {
+            const chapterCount = chapters.filter(c => c.subjectId === s.id).length;
+            return `
+              <tr>
+                <td><strong>${s.name}</strong></td>
+                <td>${s.icon}</td>
+                <td>${chapterCount}</td>
+                <td class="tbl-actions">
+                  <button class="tbl-btn edit">تعديل</button>
+                  <button class="tbl-btn delete">حذف</button>
+                </td>
+              </tr>
+            `;
+          }).join('');
+        }
+      } catch(err) {
+        console.error(err);
+      }
+    })();
+  </script>
+</body>
+</html>

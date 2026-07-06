@@ -1,0 +1,6 @@
+name: 'Railway Backend'
+values:
+  - key: baseUrl
+    value: 'https://nodejsapi-production-055c.up.railway.app/api'
+    enabled: true
+    type: default

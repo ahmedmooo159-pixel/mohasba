@@ -1,0 +1,7 @@
+$kind: http-request
+method: GET
+url: '{{baseUrl}}/chapters/:chapterId/concepts'
+order: 3000
+pathVariables:
+  - key: chapterId
+    value: 'chapter-1'

@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>دخول الأدمن — منصة محاسبتك</title>
+  <meta name="description" content="لوحة تحكم مسؤول منصة محاسبتك" />
+  <link rel="stylesheet" href="../../css/base.css" />
+  <link rel="stylesheet" href="../../css/login.css" />
+  <style>
+    .admin-login-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-2);
+      background: var(--color-warning-bg);
+      color: var(--color-warning-600);
+      font-size: var(--text-xs);
+      font-weight: var(--font-bold);
+      padding: var(--space-1) var(--space-3);
+      border-radius: var(--radius-full);
+      margin-bottom: var(--space-3);
+      border: 1px solid var(--color-warning);
+    }
+  </style>
+</head>
+<body class="login-body">
+
+  <div class="login-container">
+    <div class="login-header">
+      <div class="login-logo" style="background: var(--color-warning-600);">⚙</div>
+      <div class="admin-login-badge"> منطقة الناس المهمه</div>
+      <h1 class="login-title">لوحة تحكم المسؤول</h1>
+      <p class="login-subtitle">ادخل بياناتك للوصول لإدارة المنصة.</p>
+    </div>
+
+    <form class="login-form" id="adminLoginForm">
+      <div class="form-group">
+        <label for="adminEmail" class="form-label">البريد الإلكتروني</label>
+        <input type="email" id="adminEmail" class="form-input"
+               placeholder="admin@muhaasbatk.com" required autofocus autocomplete="email"/>
+      </div>
+
+      <div class="form-group">
+        <label for="adminPassword" class="form-label">كلمة المرور</label>
+        <input type="password" id="adminPassword" class="form-input"
+               placeholder="••••••••" required autocomplete="current-password"/>
+      </div>
+
+      <div id="errorMsg" class="error-message" aria-live="polite"></div>
+
+      <button type="submit" class="login-btn" id="submitBtn"
+              style="background: var(--color-warning-600);">
+        <span class="btn-text">دخول كأدمن</span>
+        <div class="spinner" aria-hidden="true"></div>
+      </button>
+    </form>
+
+    <div class="login-footer">
+      <a href="../login.html">← العودة لتسجيل دخول الطلاب</a>
+    </div>
+  </div>
+
+  <script src="../../js/api/apiClient.js"></script>
+  <script>
+    document.getElementById('adminLoginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      const err = document.getElementById('errorMsg');
+      err.textContent = '';
+      btn.disabled = true;
+      btn.classList.add('loading');
+
+      const email    = document.getElementById('adminEmail').value.trim();
+      const password = document.getElementById('adminPassword').value.trim();
+
+      try {
+        // Mock: any non-empty creds work
+        await new Promise(r => setTimeout(r, 700));
+        if (email && password) {
+          sessionStorage.setItem('admin_token', 'mock-admin-token');
+          sessionStorage.setItem('admin_name', 'مسؤول النظام');
+          window.location.href = 'admin-dashboard.html';
+        } else {
+          throw new Error('يرجى إدخال بريدك الإلكتروني وكلمة المرور.');
+        }
+      } catch (ex) {
+        err.textContent = ex.message;
+        btn.disabled = false;
+        btn.classList.remove('loading');
+      }
+    });
+  </script>
+</body>
+</html>

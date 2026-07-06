@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>لوحة التحكم الرئيسي — منصة محاسبتك</title>
+  <meta name="description" content="لوحة تحكم الطالب لمتابعة التقدم والأنشطة والامتحانات في كلية التجارة شعبة حسابات" />
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/dashboard.css" />
+  <link rel='stylesheet' href='../css/ai-widget.css' />
+</head>
+<body>
+  
+  <div class="app-shell">
+    
+    <!-- MAIN CONTENT AREA -->
+    <main class="app-main" id="mainContent">
+      
+      <!-- HERO BANNER -->
+      <section class="dashboard-hero" id="dashboardHeroContainer" aria-live="polite">
+        <div class="dashboard-hero-content">
+          <div class="skeleton" style="width: 250px; height: 32px; margin-bottom: var(--space-2);"></div>
+          <div class="skeleton" style="width: 450px; height: 18px;"></div>
+        </div>
+      </section>
+
+      <!-- STATS CARDS GRID -->
+      <section aria-label="الإحصائيات العامة" class="stats-grid" id="dashboardStatsContainer">
+        <!-- Injected via JavaScript -->
+      </section>
+
+      <!-- SECTIONS ROW -->
+      <div class="dashboard-sections">
+        
+        <!-- Recent Activity Section -->
+        <section aria-labelledby="activityTitle" class="dashboard-card">
+          <h2 id="activityTitle" class="dashboard-card-title">النشاط الأخير</h2>
+          <div id="dashboardActivityContainer">
+            <!-- Injected via JavaScript -->
+          </div>
+        </section>
+
+        <!-- Weekly Progress Section -->
+        <section aria-labelledby="progressTitle" class="dashboard-card">
+          <h2 id="progressTitle" class="dashboard-card-title">نسبة التقدم الأسبوعي للمواد</h2>
+          <div id="dashboardProgressContainer">
+            <!-- Injected via JavaScript -->
+          </div>
+        </section>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Auth Guard (must be first) -->
+  <script src="../js/components/authGuard.js"></script>
+
+  <!-- core API Client dependencies -->
+  <script src="../js/api/config.js"></script>
+  <script src="../js/api/apiClient.js"></script>
+  <script src="../js/api/student.api.js"></script>
+
+  <!-- Shell components JS -->
+  <script src="../js/components/sidebar.js"></script>
+  <script src="../js/components/navbar.js"></script>
+  <script src="../js/api/ai.api.js"></script>
+  <script src="../js/components/aiChatWidget.js"></script>
+
+  <!-- Page-level JS -->
+  <script src="../js/pages/dashboard.page.js"></script>
+
+  <!-- Component Initialization -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Read values if saved from student data load, else use defaults
+      const savedName = localStorage.getItem('student_name') || 'أحمد محمود';
+      const savedYear = localStorage.getItem('student_year') || 'السنة الثانية';
+      
+      // Initialize Shell Navbar & Sidebar
+      Sidebar.init({ 
+        pageId: 'dashboard', 
+        userName: savedName, 
+        userYear: savedYear 
+      });
+      Navbar.init({ 
+        pageId: 'dashboard' 
+      });
+    });
+  </script>
+</body>
+</html>

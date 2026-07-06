@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>إدارة المواد — منصة محاسبتك</title>
+  <link rel="stylesheet" href="../../css/base.css" />
+  <link rel="stylesheet" href="../../css/admin.css" />
+</head>
+<body class="admin-body">
+
+  <div class="admin-shell">
+    <main class="admin-main">
+
+      <div class="admin-page-header">
+        <div>
+          <h1 class="admin-page-title">المواد الدراسية</h1>
+          <p class="admin-page-subtitle">أضف أو عدّل أو احذف المواد وشباترها.</p>
+        </div>
+        <button class="admin-btn primary" id="openAddSubjectForm">+ إضافة مادة</button>
+      </div>
+
+      <!-- Add/Edit Form -->
+      <div class="admin-form-card" id="subjectFormCard">
+        <h3 class="admin-form-title" id="subjectFormTitle">إضافة مادة جديدة</h3>
+        <div class="admin-form-grid">
+          <div class="form-group">
+            <label class="form-label">اسم المادة</label>
+            <input type="text" id="subjectName" class="form-input" placeholder="المحاسبة المالية" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">الأيقونة (emoji)</label>
+            <input type="text" id="subjectIcon" class="form-input" placeholder="📈" maxlength="4" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">اللون</label>
+            <select id="subjectColor" class="form-select">
+              <option value="primary">بنفسجي (primary)</option>
+              <option value="warning">أصفر (warning)</option>
+              <option value="error">أحمر (error)</option>
+              <option value="success">أخضر (success)</option>
+            </select>
+          </div>
+        </div>
+        <div class="admin-form-actions">
+          <button class="admin-btn" id="cancelSubjectForm">إلغاء</button>
+          <button class="admin-btn primary" id="saveSubjectBtn">حفظ المادة</button>
+        </div>
+      </div>
+
+      <!-- Subjects Table -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h2 class="admin-card-title">قائمة المواد</h2>
+          <span id="subjectCount" style="font-size:var(--text-sm);color:var(--color-text-secondary)"></span>
+        </div>
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>المادة</th>
+                <th>الأيقونة</th>
+                <th>اللون</th>
+                <th>عدد الشباتر</th>
+                <th>إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="subjectsTbody">
+              <tr><td colspan="5" style="text-align:center;padding:var(--space-6);color:var(--color-text-muted)">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Chapters Table -->
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <h2 class="admin-card-title">الشباتر</h2>
+          <button class="admin-btn primary" id="openAddChapterForm">+ إضافة شابتر</button>
+        </div>
+
+        <!-- Chapter Form -->
+        <div class="admin-form-card" id="chapterFormCard" style="margin:var(--space-4);border:none;background:var(--color-surface-alt);">
+          <h3 class="admin-form-title">إضافة شابتر جديد</h3>
+          <div class="admin-form-grid">
+            <div class="form-group">
+              <label class="form-label">المادة</label>
+              <select id="chapterSubject" class="form-select"><option value="">اختر المادة...</option></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">عنوان الشابتر</label>
+              <input type="text" id="chapterTitle" class="form-input" placeholder="الفصل الأول: ..." />
+            </div>
+            <div class="form-group" style="grid-column:1/-1">
+              <label class="form-label">الوصف المختصر</label>
+              <input type="text" id="chapterDesc" class="form-input" placeholder="وصف محتوى الشابتر..." />
+            </div>
+          </div>
+          <div class="admin-form-actions">
+            <button class="admin-btn" id="cancelChapterForm">إلغاء</button>
+            <button class="admin-btn primary" id="saveChapterBtn">حفظ الشابتر</button>
+          </div>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table">
+            <thead>
+              <tr>
+                <th>عنوان الشابتر</th>
+                <th>المادة</th>
+                <th>الوصف</th>
+                <th>إجراءات</th>
+              </tr>
+            </thead>
+            <tbody id="chaptersTbody">
+              <tr><td colspan="4" style="text-align:center;padding:var(--space-6);color:var(--color-text-muted)">جاري التحميل...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <script src="../../js/api/apiClient.js"></script>
+  <script src="../../js/pages/admin.js"></script>
+  <script>
+    if (!Admin.guard()) throw new Error('Unauthorized');
+    Admin.renderSidebar('admin-subjects');
+
+    // ============================================================
+    // State (mock — in Sprint 9 هيتربط بالباك اند)
+    // ============================================================
+    let subjects = [];
+    let chapters = [];
+    let editingSubjectId = null;
+
+    // ============================================================
+    // Render Tables
+    // ============================================================
+    function renderSubjectsTable() {
+      const tbody = document.getElementById('subjectsTbody');
+      document.getElementById('subjectCount').textContent = `(${subjects.length} مادة)`;
+
+      if (!subjects.length) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:var(--space-6);color:var(--color-text-muted)">لا توجد مواد مسجلة.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = subjects.map(s => {
+        const chapterCount = chapters.filter(c => c.subjectId === s.id).length;
+        return `
+          <tr>
+            <td><strong>${s.name}</strong></td>
+            <td style="font-size:1.5rem">${s.icon}</td>
+            <td><span class="admin-badge ${s.color}">${s.color}</span></td>
+            <td>${chapterCount}</td>
+            <td class="tbl-actions">
+              <button class="tbl-btn edit" onclick="openEditSubject('${s.id}')">تعديل</button>
+              <button class="tbl-btn delete" onclick="deleteSubject('${s.id}')">حذف</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      // Populate chapter subject dropdown
+      const select = document.getElementById('chapterSubject');
+      select.innerHTML = '<option value="">اختر المادة...</option>' +
+        subjects.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+    }
+
+    function renderChaptersTable() {
+      const tbody = document.getElementById('chaptersTbody');
+      if (!chapters.length) {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;padding:var(--space-6);color:var(--color-text-muted)">لا توجد شباتر مسجلة.</td></tr>';
+        return;
+      }
+      tbody.innerHTML = chapters.map(c => {
+        const subj = subjects.find(s => s.id === c.subjectId);
+        return `
+          <tr>
+            <td><strong>${c.title}</strong></td>
+            <td>${subj ? subj.name : c.subjectId}</td>
+            <td style="max-width:300px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${c.description}</td>
+            <td class="tbl-actions">
+              <button class="tbl-btn delete" onclick="deleteChapter('${c.id}')">حذف</button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // ============================================================
+    // SUBJECT CRUD
+    // ============================================================
+    function openEditSubject(id) {
+      const s = subjects.find(x => x.id === id);
+      if (!s) return;
+      editingSubjectId = id;
+      document.getElementById('subjectName').value  = s.name;
+      document.getElementById('subjectIcon').value  = s.icon;
+      document.getElementById('subjectColor').value = s.color;
+      document.getElementById('subjectFormTitle').textContent = 'تعديل المادة';
+      document.getElementById('subjectFormCard').classList.add('open');
+    }
+
+    function deleteSubject(id) {
+      if (!confirm('هل أنت متأكد من حذف هذه المادة؟')) return;
+      subjects = subjects.filter(s => s.id !== id);
+      chapters = chapters.filter(c => c.subjectId !== id);
+      renderSubjectsTable();
+      renderChaptersTable();
+    }
+
+    function deleteChapter(id) {
+      if (!confirm('هل أنت متأكد من حذف هذا الشابتر؟')) return;
+      chapters = chapters.filter(c => c.id !== id);
+      renderSubjectsTable();
+      renderChaptersTable();
+    }
+
+    // ============================================================
+    // EVENT LISTENERS
+    // ============================================================
+    document.getElementById('openAddSubjectForm').addEventListener('click', () => {
+      editingSubjectId = null;
+      document.getElementById('subjectName').value = '';
+      document.getElementById('subjectIcon').value = '';
+      document.getElementById('subjectFormTitle').textContent = 'إضافة مادة جديدة';
+      document.getElementById('subjectFormCard').classList.add('open');
+    });
+
+    document.getElementById('cancelSubjectForm').addEventListener('click', () => {
+      document.getElementById('subjectFormCard').classList.remove('open');
+    });
+
+    document.getElementById('saveSubjectBtn').addEventListener('click', () => {
+      const name  = document.getElementById('subjectName').value.trim();
+      const icon  = document.getElementById('subjectIcon').value.trim();
+      const color = document.getElementById('subjectColor').value;
+
+      if (!name) { alert('يرجى إدخال اسم المادة.'); return; }
+
+      if (editingSubjectId) {
+        const s = subjects.find(x => x.id === editingSubjectId);
+        if (s) { s.name = name; s.icon = icon || '📚'; s.color = color; }
+      } else {
+        subjects.push({ id: 'subj-' + Date.now(), name, icon: icon || '📚', color });
+      }
+
+      document.getElementById('subjectFormCard').classList.remove('open');
+      renderSubjectsTable();
+    });
+
+    document.getElementById('openAddChapterForm').addEventListener('click', () => {
+      document.getElementById('chapterFormCard').classList.add('open');
+    });
+
+    document.getElementById('cancelChapterForm').addEventListener('click', () => {
+      document.getElementById('chapterFormCard').classList.remove('open');
+    });
+
+    document.getElementById('saveChapterBtn').addEventListener('click', () => {
+      const subjectId = document.getElementById('chapterSubject').value;
+      const title     = document.getElementById('chapterTitle').value.trim();
+      const desc      = document.getElementById('chapterDesc').value.trim();
+
+      if (!subjectId || !title) { alert('يرجى اختيار المادة وكتابة عنوان الشابتر.'); return; }
+
+      chapters.push({ id: 'ch-' + Date.now(), subjectId, title, description: desc || '—', progress: 0 });
+      document.getElementById('chapterFormCard').classList.remove('open');
+      document.getElementById('chapterTitle').value = '';
+      document.getElementById('chapterDesc').value  = '';
+      renderSubjectsTable();
+      renderChaptersTable();
+    });
+
+    // ============================================================
+    // INIT
+    // ============================================================
+    (async () => {
+      try {
+        const [sd, cd] = await Promise.all([
+          ApiClient.get('/subjects'),
+          ApiClient.get('/subjects/chapters'),
+        ]);
+        subjects = sd.subjects  || [];
+        chapters = cd.chapters  || [];
+        renderSubjectsTable();
+        renderChaptersTable();
+      } catch(err) { console.error(err); }
+    })();
+  </script>
+</body>
+</html>

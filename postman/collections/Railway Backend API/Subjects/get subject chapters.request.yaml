@@ -1,0 +1,7 @@
+$kind: http-request
+method: GET
+url: '{{baseUrl}}/subjects/:subjectId/chapters'
+order: 2000
+pathVariables:
+  - key: subjectId
+    value: 'subject-1'

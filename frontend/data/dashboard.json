@@ -1,0 +1,97 @@
+{
+  "student": {
+    "name": "أحمد محمود",
+    "academicYear": "السنة الثانية",
+    "progressPercent": 85,
+    "nextLesson": {
+      "subject": "المحاسبة المالية",
+      "chapter": "الفصل الثاني: قيود اليومية والتسويات"
+    }
+  },
+  "stats": [
+    {
+      "id": "progress",
+      "label": "نسبة إتمام المنهج",
+      "value": "85%",
+      "icon": "📚",
+      "color": "primary"
+    },
+    {
+      "id": "exams-completed",
+      "label": "امتحان تم إتمامه",
+      "value": "12",
+      "icon": "✅",
+      "color": "success"
+    },
+    {
+      "id": "exams-remaining",
+      "label": "امتحانات متبقية",
+      "value": "3",
+      "icon": "⏰",
+      "color": "warning"
+    },
+    {
+      "id": "videos-watched",
+      "label": "فيديو تمت مشاهدته",
+      "value": "48",
+      "icon": "🎬",
+      "color": "info"
+    }
+  ],
+  "recentActivity": [
+    {
+      "id": 1,
+      "title": "امتحان محاسبة مالية — الفصل الأول",
+      "time": "منذ ساعتين",
+      "type": "exam",
+      "status": "92%",
+      "statusClass": "success"
+    },
+    {
+      "id": 2,
+      "title": "مشاهدة فيديو: الدورة المحاسبية",
+      "time": "منذ 3 ساعات",
+      "type": "video",
+      "status": "فيديو",
+      "statusClass": "primary"
+    },
+    {
+      "id": 3,
+      "title": "مراجعة تعريفات: الأصول والخصوم",
+      "time": "أمس",
+      "type": "concept",
+      "status": "مكتمل",
+      "statusClass": "success"
+    },
+    {
+      "id": 4,
+      "title": "امتحان محاسبة تكاليف — عملي",
+      "time": "منذ يومين",
+      "type": "exam",
+      "status": "78%",
+      "statusClass": "warning"
+    }
+  ],
+  "weeklyProgress": [
+    {
+      "subject": "المحاسبة المالية",
+      "percent": 90,
+      "color": "primary"
+    },
+    {
+      "subject": "محاسبة التكاليف",
+      "percent": 65,
+      "color": "warning"
+    },
+    {
+      "subject": "المراجعة الداخلية",
+      "percent": 45,
+      "color": "error"
+    },
+    {
+      "subject": "الضرائب والزكاة",
+      "percent": 80,
+      "color": "primary"
+    }
+  ]
+}

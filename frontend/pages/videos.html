@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الفيديوهات الشارحة — منصة محاسبتك</title>
+  <meta name="description" content="فيديوهات شرح المنهج، مقسمة حسب المواد والشباتر" />
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <!-- We reuse concepts.css for the selector layout (subject + chapter layout) -->
+  <link rel="stylesheet" href="../css/concepts.css" />
+  <link rel="stylesheet" href="../css/videos.css" />
+  <link rel='stylesheet' href='../css/ai-widget.css' />
+</head>
+<body>
+  
+  <div class="app-shell">
+    
+    <!-- MAIN CONTENT AREA -->
+    <main class="app-main" id="mainContent">
+      
+      <!-- PAGE HEADER -->
+      <header class="page-header">
+        <h1 class="page-title">الفيديوهات الشارحة</h1>
+        <p class="page-subtitle">استعرض الفيديوهات المخصصة لكل مادة للتمكن من الجانب العملي والنظري.</p>
+      </header>
+
+      <!-- SUBJECT SELECTOR -->
+      <section class="subject-selector" aria-label="اختيار المادة">
+        <span class="section-label">المادة الدراسية</span>
+        <div id="subjectListContainer">
+          <!-- Injected via subjectSelector.js -->
+        </div>
+      </section>
+
+      <!-- CHAPTER & VIDEOS LAYOUT (reusing .content-layout from concepts.css) -->
+      <div class="content-layout">
+        
+        <!-- CHAPTER SELECTOR SIDEBAR -->
+        <aside aria-label="قائمة الشباتر">
+          <span class="section-label">الشباتر</span>
+          <div id="chapterListContainer">
+            <!-- Injected via subjectSelector.js -->
+          </div>
+        </aside>
+
+        <!-- VIDEOS VIEWER -->
+        <section aria-label="قائمة الفيديوهات">
+          <span class="section-label">الفيديوهات</span>
+          <div id="videosContainer">
+            <!-- Injected via videos.page.js -->
+            <div class="empty-state">
+              <p class="empty-state-text">اختر مادة وشابتر لعرض الفيديوهات الخاصة بهما.</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- Auth Guard (must be first) -->
+  <script src="../js/components/authGuard.js"></script>
+
+  <!-- core API Client dependencies -->
+  <script src="../js/api/config.js"></script>
+  <script src="../js/api/apiClient.js"></script>
+  <script src="../js/api/subjects.api.js"></script>
+
+  <!-- Shell & UI components JS -->
+  <script src="../js/components/sidebar.js"></script>
+  <script src="../js/components/navbar.js"></script>
+  
+  <!-- Reusable Selector from Sprint 4 -->
+  <script src="../js/components/subjectSelector.js"></script>
+
+  <!-- Page-level JS -->
+  <script src="../js/pages/videos.page.js"></script>
+
+  <!-- Component Initialization -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Read values if saved from student data load, else use defaults
+      const savedName = localStorage.getItem('student_name') || 'أحمد محمود';
+      const savedYear = localStorage.getItem('student_year') || 'السنة الثانية';
+      
+      // Initialize Shell Navbar & Sidebar
+      Sidebar.init({ 
+        pageId: 'videos', 
+        userName: savedName, 
+        userYear: savedYear 
+      });
+      Navbar.init({ 
+        pageId: 'videos' 
+      });
+    });
+  </script>
+  <script src='../js/components/aiChatWidget.js'></script>
+</body>
+</html>

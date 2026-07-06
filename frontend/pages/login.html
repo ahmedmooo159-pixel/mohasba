@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تسجيل الدخول — منصة محاسبتك</title>
+  <meta name="description" content="تسجيل الدخول لمنصة محاسبتك لطلاب كلية التجارة شعبة حسابات" />
+  
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/login.css" />
+</head>
+<body class="login-body">
+  
+  <div class="login-container">
+    <div class="login-header">
+      <div class="login-logo">م</div>
+      <h1 class="login-title">منصة محاسبتك</h1>
+      <p class="login-subtitle">مرحباً بك مجدداً! قم بتسجيل الدخول للمتابعة.</p>
+    </div>
+
+    <form class="login-form" id="loginForm">
+      <div class="form-group">
+        <label for="emailInput" class="form-label">البريد الإلكتروني</label>
+        <input type="email" id="emailInput" class="form-input" placeholder="student@commerce.edu.eg" required autofocus autocomplete="email" />
+      </div>
+
+      <div class="form-group">
+        <label for="passwordInput" class="form-label">كلمة المرور</label>
+        <input type="password" id="passwordInput" class="form-input" placeholder="••••••••" required autocomplete="current-password" />
+      </div>
+
+      <div id="errorMsg" class="error-message" aria-live="polite"></div>
+
+      <button type="submit" class="login-btn" id="submitBtn">
+        <span class="btn-text">تسجيل الدخول</span>
+        <div class="spinner" aria-hidden="true"></div>
+      </button>
+    </form>
+
+    <!-- Footer: go to register -->
+    <div class="login-footer">
+      مش عندك حساب؟ <a href="register.html">أنشئ حساباً جديداً</a>
+    </div>
+
+  </div>
+
+  <!-- core API Client dependencies -->
+  <script src="../js/api/config.js"></script>
+  <script src="../js/api/apiClient.js"></script>
+  <script src="../js/api/auth.api.js"></script>
+  
+  <!-- Page-level JS -->
+  <script src="../js/pages/login.page.js"></script>
+</body>
+</html>

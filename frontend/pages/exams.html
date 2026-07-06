@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>الامتحانات — منصة محاسبتك</title>
+  <meta name="description" content="بنك الأسئلة والامتحانات لطلاب كلية التجارة شعبة حسابات" />
+  <link rel="stylesheet" href="../css/base.css" />
+  <link rel="stylesheet" href="../css/layout.css" />
+  <link rel="stylesheet" href="../css/concepts.css" />
+  <link rel="stylesheet" href="../css/exams.css" />
+  <link rel='stylesheet' href='../css/ai-widget.css' />
+</head>
+<body>
+  <div class="app-shell">
+    <main class="app-main" id="mainContent">
+
+      <header class="page-header">
+        <h1 class="page-title">بنك الأسئلة والامتحانات</h1>
+        <p class="page-subtitle">اختر المادة ثم ابدأ الامتحان المناسب لك — نظري أو عملي.</p>
+      </header>
+
+      <section class="subject-selector" aria-label="اختيار المادة">
+        <span class="section-label">المادة الدراسية</span>
+        <div id="subjectListContainer"></div>
+      </section>
+
+      <section aria-label="الامتحانات المتاحة">
+        <span class="section-label">الامتحانات المتاحة</span>
+        <div id="examSectionsContainer">
+          <div class="empty-state">
+            <p class="empty-state-text">اختر مادة لعرض الامتحانات المتاحة.</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <script src="../js/components/authGuard.js"></script>
+  <script src="../js/api/config.js"></script>
+  <script src="../js/api/apiClient.js"></script>
+  <script src="../js/api/subjects.api.js"></script>
+  <script src="../js/api/exams.api.js"></script>
+  <script src="../js/components/sidebar.js"></script>
+  <script src="../js/components/navbar.js"></script>
+  <script src="../js/pages/exams.page.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const n = localStorage.getItem('student_name') || 'أحمد محمود';
+      const y = localStorage.getItem('student_year') || 'السنة الثانية';
+      Sidebar.init({ pageId: 'exams', userName: n, userYear: y });
+      Navbar.init({ pageId: 'exams' });
+    });
+  </script>
+  <script src='../js/components/aiChatWidget.js'></script>
+</body>
+</html>
